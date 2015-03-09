@@ -2,3 +2,10 @@ src/ttc15-tranj/target
 src/ttc15-tranj/.classpath
 src/ttc15-tranj/.project
 src/ttc15-tranj/.settings
+case-description.pag
+doc/case-description.aux
+doc/case-description.fdb_latexmk
+doc/case-description.fls
+doc/case-description.log
+doc/case-description.out
+doc/_minted-case-description

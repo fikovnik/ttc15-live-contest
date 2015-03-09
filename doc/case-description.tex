@@ -1,0 +1,88 @@
+\documentclass{eptcs}
+\providecommand{\event}{TTC 2015} % Name of the event you are submitting to
+
+\usepackage[usenames,dvipsnames,table]{xcolor}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{paralist}
+\usepackage{graphicx}
+\usepackage{minted}
+\usepackage{url}
+\usepackage[utf8]{inputenc}
+\usepackage{paralist}
+\usepackage{amstext}
+\usepackage{amsfonts}
+\usepackage{xspace}
+\usepackage{todonotes}
+\usepackage{mdframed}
+
+\hypersetup{
+  colorlinks, 
+  breaklinks, 
+  bookmarksnumbered=true,
+  pdftitle={TTC'15 Case Study: Transformation of Java Annotations},
+  pdfauthor={Filip Krikava and Martin Monperrus}, 
+  linkcolor=Blue, 
+  citecolor=BrickRed, 
+  filecolor=Blue, 
+  urlcolor=Blue
+  }
+
+\renewcommand{\ttdefault}{pcr}
+
+\newcommand{\Ie}{\emph{i.e.}\xspace}
+\newcommand{\Eg}{\emph{e.g.}\xspace}
+\newcommand{\Etal}{\emph{et al.}\xspace}
+\newcommand{\Cf}{\emph{cf.}\xspace}
+
+\newcommand{\Todo}[1]{\todo[inline]{#1}}
+% \renewcommand{\Todo}[1]{}
+
+\newminted{java}{fontsize=\fontsize{8}{8},breaklines,linenos,numbersep=5pt,frame=lines,framesep=2mm}
+\newmintinline{java}{fontsize=\fontsize{8}{8}}
+
+\title{TTC'15 Case Study: Transformation of Java Annotations}
+
+\author{
+  Filip Křikava
+  \institute{INRIA Lille}
+  \institute{France}
+  \email{\href{mailto:filip.krikava@inria.fr}{filip.krikava@inria.fr}}
+\and
+  Martin Monperrus
+  \institute{University Lille 1 / INRIA Lille}
+  \institute{France}
+  \email{\href{mailto:martin.monperrus@univ-lille1.fr}{martin.monperrus@univ-lille1.fr}}
+}
+
+\def\titlerunning{TTC'15: Transformation of Java Annotations}
+\def\authorrunning{F. Křikava and M. Monperrus}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+Java 5 introduced annotations as a systematic mean to syntactic meta-data to various elements of Java source code.
+They are extensively used by various frameworks to conveniently extend behavior of Java programs that would otherwise have to be done manually or synthesized from an external resource.
+These frameworks often use reflection or instrument Java classes through aspect-oriented techniques or a direct bytecode modification.
+However, class level instrumentation might not always be available or desirable.
+
+In this case study we focus on source level transformation.
+Concretely, the task is to inlines behavior specified by an annotation library that encapsulates common programming concerns such as logging, caching and retry on a failure.
+The objective is to explore how current transformation tools are suitable for programming language transformations.
+\end{abstract}
+
+\input{introduction.tex}
+\input{description.tex}
+\input{evaluation.tex}
+
+\bibliographystyle{eptcs}
+% \bibliography{references.bib}	
+
+\appendix
+
+\input{code-listings.tex}
+
+\end{document}
