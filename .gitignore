@@ -9,3 +9,5 @@ doc/case-description.fls
 doc/case-description.log
 doc/case-description.out
 doc/_minted-case-description
+doc/case-description.bbl
+doc/case-description.blg

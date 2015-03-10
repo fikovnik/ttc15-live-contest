@@ -46,6 +46,6 @@ public @interface RetryOnFailure {
   /**
    * When to retry (in case of what exception types).
    */
-  Class<? extends Throwable>[] types() default { Throwable.class };
+  Class<? extends Throwable>[] retry() default { Throwable.class };
 
 }

@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
 
@@ -61,7 +62,7 @@ public class ManualURLDownload {
       } catch (UnknownHostException e) {
           logger.error("get(): exception -> forced exit", e);
         throw e;
-      } catch (IOException e) {
+      } catch (SocketTimeoutException e) {
         if (logger.isWarnEnabled()) {
           logger.warn("get(): exception -> retrying", e);
         }

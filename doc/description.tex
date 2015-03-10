@@ -3,32 +3,31 @@
 \section{Case Description}
 \label{sec:Description}
 
-As the annotation library, we use a simplified version of \texttt{jcabi-aspects}\footnote{\url{http://aspects.jcabi.com/index.html}} which is a collection Java annotations together with AOP-based processing tool which allow developers to conveniently apply some common cross-cutting concerns into Java application.
+As the annotation library, we use a simplified version of \texttt{jcabi-aspects}~\cite{jcabi}, a collection of Java annotations together with AOP-based processing tool which allows developers to conveniently apply some common cross-cutting concerns into Java application.
 From all the \texttt{jcabi-aspects} annotations, we have selected the following:
 %
 \begin{description}
   \item[\href{https://github.com/fikovnik/ttc15-tranj-case/blob/master/src/ttc15-tranj/src/main/java/ttc15/tranj/annotation/RetryOnFailure.java}{\javainline|@RetryOnFailure|}] for an automated retry of failed method execution.
   \item[\href{https://github.com/fikovnik/ttc15-tranj-case/blob/master/src/ttc15-tranj/src/main/java/ttc15/tranj/annotation/Cacheable.java}{\javainline|@Cacheable|}] for a simple data caching of parameterless methods return values.
-  \item[\href{https://github.com/fikovnik/ttc15-tranj-case/blob/master/src/ttc15-tranj/src/main/java/ttc15/tranj/annotation/Loggable.java}{\javainline|@Loggable|}] for an automated logging of method calls including method entry, exit and any exception that is caught in the method body.
+  \item[\href{https://github.com/fikovnik/ttc15-tranj-case/blob/master/src/ttc15-tranj/src/main/java/ttc15/tranj/annotation/Loggable.java}{\javainline|@Loggable|}] for an automated logging of method calls including method entry, all exit points and any exception that is caught within the method body.
 \end{description}
 
-The core transformation involves traversing a source Java class and extending the annotated methods with the behavior specified by the above annotations.
-The details of each annotation including the specification of its arguments are provided in its associated javadoc\footnote{\url{https://github.com/fikovnik/ttc15-tranj-case/tree/master/src/ttc15-tranj/src/main/java/ttc15/tranj/annotation}}.
+The core transformation involves traversing a source Java class and extending the annotated methods with the behavior specified by these annotations.
+The details of each annotation including the specification of its arguments are provided in its associated \href{https://github.com/fikovnik/ttc15-tranj-case/tree/master/src/ttc15-tranj/src/main/java/ttc15/tranj/annotation}{javadoc}.
 
 In the following we provide an overview of the transformation tasks processing one annotation at a time.
 The transformation is described using an example rather than with a formal definition.
 While we believe that it should be enough, shall there be any ambiguity, we invite the reader to raise an issue on the case study \href{https://github.com/fikovnik/ttc15-tranj-case}{github page}.
-In the last task, we look on the case of combining these annotations together and optimizing the resulting Java source code.
+In the last task, we look on the case of combining these annotations together.
+Finally, we propose an extension for an optimization the resulting Java source code when these annotations are used together.
 
-The complete code for these transformation tasks is provide on the github page in the \href{https://github.com/fikovnik/ttc15-tranj-case/tree/master/src/ttc15-tranj/src/main/java/ttc15/tranj/examples}{\javainline|ttc15.tranj.examples| package}.
+The complete code for these transformation tasks is provide on the github page in the\\ \href{https://github.com/fikovnik/ttc15-tranj-case/tree/master/src/ttc15-tranj/src/main/java/ttc15/tranj/examples}{\javainline|ttc15.tranj.examples| package}.
 
 \subsection{Running Example}
 
 To better illustrate the transformation tasks of this case study, we use the following example.
-In order to keep the case study concise and clear, we use only a single example and omit the use of any external library.
-
-Let us consider a class that can download a content of an URL.
-A possible Java implementation is shown in Listing~\ref{lst:URLDownload}.
+Let us consider a class that is used to download a content of an URL.
+A possible Java implementation is shown in Listing~\ref{lst:URLDownload}\footnote{In order to keep the case study concise and clear we omit the use of any external library.}.
 
 \begin{listing}[H]
   \begin{javacode}
@@ -59,22 +58,22 @@ A possible Java implementation is shown in Listing~\ref{lst:URLDownload}.
   \label{lst:URLDownload}
 \end{listing}
 
-Now, when we have the basic functionality, we would like to extend it with following features:
+Now, when we have the basic functionality code, we would like to extend it with the following features:
 
 \begin{itemize}[--]
-   \item \emph{Failure handling.} The method should become more robust and accommodate for some of the inevitable network delays by retrying the download in case an exception occurs.
-   It should however only retry the call in the case when it makes sense--\Ie when it is possible to recover.
-   For example, in the case of \javainline|UnknownHostException| exception, it should fail immediately.
+   \item \emph{Failure handling.} The method should become more robust and accommodate for some of the inevitable network delays by retrying the download in the case an exception occurs.
+   It should, however, only retry the call in the case when it makes sense--\Ie when it is possible to recover.
+   For example, in the case of \javainline|UnknownHostException| exception, it should fail immediately, while \javainline|SocketTimeoutException| should trigger a retry (preferably after a delay).
    \item \emph{Caching.} The URL should not be consulted every single time the method is called, but instead it should keep the content for certain amount of time in memory.
    \item \emph{Logging.} Each call to the method should be logged.
    The logging message should present the state of the current instance (\javainline|this.toString()|) as well as how long the invocation took.
 \end{itemize} 
 
-Instead of coding this manually, producing code such as the one shown in the listing in Section~\ref{sec:ManualURLDownload}, we would like to use annotations to declaratively specify the above concerns and have the a transformation tool automatically synthesize code similar to the shown in Section~\ref{sec:SynthesizedURLDownload}.
-Concretely, the only change to the original code should the annotating the method with the following annotations:
+Instead of coding this manually, producing code such as the one shown in the listing in Section~\ref{sec:ManualURLDownload}, we would like to use annotations to declaratively specify the above concerns and have a transformation tool automatically synthesize code similar to the shown in Section~\ref{sec:SynthesizedURLDownload}.
+Concretely, the only change to the original code should be the following annotations:
 %
 \begin{javacode}
-@RetryOnFailure(attempts = 3, delay = 1000, escalate = { UnknownHostException.class })
+@RetryOnFailure(attempts = 3, delay = 1000, retry = { SocketTimeoutException.class }, escalate = { UnknownHostException.class })
 @Cacheable(lifetime = 1000)
 @Loggable
 public byte[] get() throws IOException { ... }
@@ -83,30 +82,36 @@ public byte[] get() throws IOException { ... }
 \subsection{Task 1: Retrying on a Failure}
 
 The first transformation tasks should handle the \javainline|@RetryOnFailure| annotation.
-The objective is extend a given method with a simple failure handling strategy that retries failed method invocations.
+The objective is to extend a given method with a simple failure handling strategy that retries failed invocations according to given options.
 Annotating the \javainline|URLDownload.get()| method with
 %
 \begin{javacode}
-@RetryOnFailure(attempts = 3, delay = 1000, types = { IOException.class }, escalate = { UnknownHostException.class })
+@RetryOnFailure(attempts = 3, delay = 1000, types = { SocketTimeoutException.class }, escalate = { UnknownHostException.class })
 \end{javacode}
 %
 should produce the following code:
 %
 \begin{javacode}
-public byte[] get() throws IOException { 
+public byte[] get() throws IOException {
+  // added retry counter 
   int __retryCount = 0;
 
+  // added loop
   while (true) {
     try {
       // the content of the original method
+      ...
     } catch (UnknownHostException e) {
+      // added escalation cases
       throw e;
-    } catch (IOException e) {
+    } catch (SocketTimeoutException e) {
+      // added retry cases
       __retryCount += 1;
 
       if (__retryCount > 3) {
         throw e;
       } else {
+        // added delay 
         try {
           Thread.sleep(1000);
         } catch (InterruptedException e1) {
@@ -118,30 +123,26 @@ public byte[] get() throws IOException {
 }
 \end{javacode}
 
-The original method code--\Ie what is between the lines 9--20 in Listing~\ref{lst:URLDownload}, is wrapped by another try-catch block which is itself in a while loop.
-The number of attempts (3) is projected in the condition \javainline|if (__retryCount > 3)|, the delay is translated in a current thread sleep on lines 15--19.
-Finally, we make a distinction in the exceptions that on which the call should be retried (\javainline|IOException|) and the ones that should be escalated (\javainline|UnknownHostException|) in the generated catch clauses in line 9 and 7 respectively.
+The original method code--\Ie what is between the lines 9--20 in Listing~\ref{lst:URLDownload}, is wrapped by another try-catch block (line 7) which is itself in a while loop (line 6).
+The number of attempts (3) is projected in the condition \javainline|if (__retryCount > 3)| (line 17), the delay is translated in a current thread sleep on lines 21--25.
+Finally, we make a distinction in the exceptions that on which the call should be retried (\javainline|SocketTimeoutException|) and the ones that should be escalated (\javainline|UnknownHostException|) in the generated catch clauses in line 10 and 13 respectively.
 
 \subsection{Task 2: Caching}
 
-The second transformation tasks should handle the \javainline|@RetryOnFailure| annotation.
-The objective is extend a given method with a simple failure handling strategy that retries failed method invocations.
-Annotating the \javainline|URLDownload.get()| method with
-%
-\begin{javacode}
-@Cacheable(lifetime = 1000)
-\end{javacode}
-%
-should produce the following code:
+The second transformation tasks should handle the \javainline|@Cacheable| annotation.
+The objective is extend a given method with a simple caching strategy that keeps a result of a method invocation for a given period of time.
+Annotating the \javainline|URLDownload.get()| method with \javainline|@Cacheable(lifetime = 1000)| should produce the following code:
 %
 \begin{javacode}
 public class URLDownload {
+  // added bookkeeping fields
   private long __getCacheLastAccessed = 0;
   private byte[] __getCacheContent = null;
 
   ...
 
   public byte[] get() throws IOException {
+    // added condition
     if (System.currentTimeMillis() - __getCacheLastAccessed < 1000 && __getCacheContent != null) {
       return __getCacheContent;
     }
@@ -155,18 +156,20 @@ public class URLDownload {
         buffer.write(chunk, 0, n);
       }
 
+      // added
       __getCacheContent = buffer.toByteArray();
       __getCacheLastAccessed = System.currentTimeMillis();
       
+      // added
       return __getCacheContent;
     }
   }
 }
 \end{javacode}
 
-The \javainline|__getCacheLastAccessed| and \javainline|__getCacheContent| defined on line 2 and 3 are cache bookkeeping fields used for storing the information about the last access time and method result respectively.
-The condition on line 8 checks the validity of the cache based on the annotation \javainline|lifetime|.
-Finally, the method exit point (\javainline|return|) is replaced with the stored result on lines 22--25.
+The \javainline|__getCacheLastAccessed| and \javainline|__getCacheContent| defined on line 3 and 4 are cache bookkeeping fields used for storing the information about the last access time and method result respectively.
+The condition on line 10 checks the validity of the cache based on the annotation \javainline|lifetime|.
+Finally, the method exit point (\javainline|return|) is replaced with the stored result on lines 24--25.
 This should be done for all method exit points.
 
 \subsection{Task 3: Logging}
@@ -176,16 +179,10 @@ Any method annotated with \javainline|@Loggable| should have conditionally (depe
 \begin{inparaenum}[(i)]
 \item its entry point, 
 \item all its exit points, and 
-\item all exceptions. 
+\item all exceptions that are caught. 
 \end{inparaenum}
 
-Annotating the \javainline|URLDownload.get()| method with
-%
-\begin{javacode}
-@Loggable
-\end{javacode}
-%
-should produce the following code:
+Annotating the \javainline|URLDownload.get()| method with \javainline|@Loggable| should produce the following code:
 %
 \begin{javacode}
 public class URLDownload {
@@ -221,11 +218,13 @@ public class URLDownload {
 }
 \end{javacode}
 
-Line 2 defines an instance of SLF4J logger\footnote{\url{http://www.slf4j.org/}}.
-Lines 7--10 and 22-24 insert the entry and exit point logging.
+Line 3 defines an instance of SLF4J logger\footnote{\url{http://www.slf4j.org/}}.
+Lines 9--11 and 25-27 insert the entry and exit point logging respectively.
+The entry point logging message additionally includes the state of the object--\Ie the value of all its declared (non-inherited) fields.
 
 Because, there is no exception handling code--\Ie no catch clause, only entry and exit points are traced.
-If we would however apply the logging annotation on the method shown as output of \javainline|@RetryOnFailure|, the result should look like:
+If we would, however, apply the logging annotation on the method shown as output of \javainline|@RetryOnFailure| transformation, a log message should be added right after every catch clause.
+The result should look like:
 %
 \begin{javacode}
 while (true) {
@@ -236,7 +235,7 @@ while (true) {
     __logger.error("get(): exception", e);
 
     throw e;
-  } catch (IOException e) {
+  } catch (SocketTimeoutException e) {
     // added exception handling
     __logger.error("get(): exception", e);
 
@@ -274,7 +273,7 @@ The expected result is shown in Section~\ref{sec:SynthesizedURLDownload}.
 
 \subsection{Extension 1: Optimization (\emph{optional})}
 
-A possible extension to this case study is to have the annotations being aware of one another.
+An optional extension to this case study is to have the annotations being aware of one another.
 In this case, the order of the annotations does not matter and they will be always applied in the order specified in the task 4.
 For the caching and retry on failure, nothing will change, but the logging will recognize the generated code and adjust the logging messages appropriately.
 The expected result--\Ie placement and message content is shown in the Section~\ref{sec:ManualURLDownload}.

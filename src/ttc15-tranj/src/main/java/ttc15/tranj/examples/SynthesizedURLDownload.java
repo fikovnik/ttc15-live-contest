@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
 
@@ -59,7 +60,7 @@ public class SynthesizedURLDownload {
           __logger.trace(String.format("get(): exit [%d ms]", System.currentTimeMillis() - __entryTime));
         }
         throw e;
-      } catch (IOException e) {
+      } catch (SocketTimeoutException e) {
         __logger.error("get(): exception", e);
 
         __retryCount += 1;

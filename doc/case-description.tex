@@ -64,14 +64,14 @@
 
 \begin{abstract}
 
-Java 5 introduced annotations as a systematic mean to syntactic meta-data to various elements of Java source code.
-They are extensively used by various frameworks to conveniently extend behavior of Java programs that would otherwise have to be done manually or synthesized from an external resource.
-These frameworks often use reflection or instrument Java classes through aspect-oriented techniques or a direct bytecode modification.
-However, class level instrumentation might not always be available or desirable.
+Java 5 introduced annotations as a systematic mean to attach syntactic meta-data to various elements of Java source code.
+Since then, annotations have been extensively used by a number of libraries, frameworks and tools to conveniently extend behavior of Java programs that would otherwise have to be done manually or synthesized from an external resource.
+The annotations are usually processed through reflection and the extended behavior is injected into Java classes using aspect-oriented techniques or a direct byte code modification.
+However, in some cases, class-level instrumentation might not always be available or desirable and the transformation happens at the source code level.
 
-In this case study we focus on source level transformation.
-Concretely, the task is to inlines behavior specified by an annotation library that encapsulates common programming concerns such as logging, caching and retry on a failure.
-The objective is to explore how current transformation tools are suitable for programming language transformations.
+In this case study we focus on such source-level transformation.
+Concretely, the task is to inject behavior specified by an annotation library that encapsulates common programming concerns such as logging, caching and retry on a failure.
+The objective is to explore how are the contemporary transformation tools suitable for programming language transformations.
 \end{abstract}
 
 \input{introduction.tex}
@@ -79,7 +79,7 @@ The objective is to explore how current transformation tools are suitable for pr
 \input{evaluation.tex}
 
 \bibliographystyle{eptcs}
-% \bibliography{references.bib}	
+\bibliography{references.bib}	
 
 \appendix
 

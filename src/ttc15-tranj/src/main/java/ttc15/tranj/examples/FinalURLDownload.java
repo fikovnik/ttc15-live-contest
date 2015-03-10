@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
 
@@ -19,7 +20,7 @@ public class FinalURLDownload {
     this.url = new URL(url);
   }
 
-  @RetryOnFailure(attempts = 3, delay = 1000, types = { IOException.class }, escalate = { UnknownHostException.class })
+  @RetryOnFailure(attempts = 3, delay = 1000, retry = { SocketTimeoutException.class }, escalate = { UnknownHostException.class })
   @Cacheable(lifetime = 1000)
   @Loggable
   public byte[] get() throws IOException {
