@@ -3,9 +3,9 @@
 \section{Evaluation Criteria}
 \label{sec:EvaluationCriteria}
 
-The submitted solutions will be evaluated done on a synthetic data set as well as on a real source code.
-The transformation is expected to be packed in the way that it is runnable from a command line shell.
-The program is expected to take two arguments, an input \texttt{valid} Java 7 source file and output a \emph{valid} Java 7 source file transformed according to the provided annotations.
+The submitted solutions will be evaluated on a synthetic data set as well as on a real source code.
+The transformation is therefore expected to be packed in the way that it is runnable from a command line shell.
+The program should take two arguments, a path to a \texttt{valid} Java 7 source file input and a path to where the result transformation should be written.
 %
 \begin{minted}{sh}
 $ ./my-solution.sh URLDownload.java SynthesizedURLDownload.java
@@ -14,29 +14,30 @@ $ ./my-solution.sh URLDownload.java SynthesizedURLDownload.java
 A part of the evaluation process is done automatically and therefore the ability of scripting the transformation is important.
 It also demonstrates the usability of the solution.
 The evaluation test cases will be made available to the contestants after the submission period to reevaluate theirs and others solutions.
-For this case study we have chosen the following evaluation criteria that are evaluated automatically:
+For this case study we have chosen the following criteria that are evaluated automatically:
 %
 \begin{itemize}[--]
   \item \emph{Correctness.} The transformation tasks are scored individually on the $0-1$ scale that corresponds to the percentage of successful transformations--\Ie the number of correctly inserted code versus the total number of expected insertion points.
+  As a prerequisite, the resulting file must be a valid Java 7 file that compiles and whose original behavior is not altered.
   
   \item \emph{Performance.} All submissions will be also assessed on their performance--\Ie how long did it take to transform the individual test cases.
 \end{itemize}
 
-Next to the automatic evaluation, we also consider a number of quality attributes that will be assess manually by both the authors of the solution as well as by the reviewers during the open review process.
-The following quality attributes have been chosen:
+Next to the automatic evaluation, we are also interested in the assessment of the usability of a given transformation tool to the problem being addressed.
+Usability of a programming language, a library or a tool is difficult to assess as it tends to be subjective since it largely depends on the preferences and background of its users.
+In this case study we use a combination of source code complexity, abstraction level and development effort.
+For each task defined in the previous section, we ask the solution authors to provide a measures of 
 %
 \begin{itemize}[--]
-  \item \emph{Source code complexity.} The number of source lines of code (SLOC) of all manually written excluding comments and empty lines.
-  Interpreting SLOC metrics is always problematic and the issue of what is the right level of ``verbosity'' in a language is complex and should not be reduced naively to just counting SLOC.
-  However, our assumption, however, is that usability is not achieved by having fewer lines of code, but instead, by having more expressive and concise code, which is beneficial to writers as well as to readers.
-  On the other hand, code bloat resulting from code duplication and from lack of constructs that enable the building of more concise but expressive statements, is not desirable.
-
-  \item \emph{Abstraction level.} The degree of the expressiveness of the solution ranging from high to low.
-  The objective behind this metric is to determine how closely the solution expresses the problem being addressed.
-  A high abstraction level has the solution expresses in the terms of problem-level concepts while a low-level abstraction level is using simple implementation-level concepts.
-
-  \item \emph{Extensibility.} How much effort is there to extend the solution with another annotation.
-  A way to measure this is to calculate the amount of effort in the terms of time and SLOC to implement Task 2 and 3 after the Task 1 has been completed.
-
-  \item \emph{Development effort.} The time in person-hours spent in developing the solution including design, implementation, testing and debugging.
+  \item The number of source lines of code (SLOC) of all manually written code excluding comments and empty lines.
+  \item The time in person-hours spent in developing the solution including design, implementation, testing and debugging.
 \end{itemize}
+
+Interpreting SLOC metrics is always problematic and the issue of what is the right level of ``verbosity'' in a language is complex and should not be reduced naively to just counting SLOC.
+On the one hand, usability is not achieved only by having fewer lines of code, but instead, by having more expressive and concise code, which is beneficial to writers as well as to readers.
+On the other hand, code bloat resulting from code duplication and from lack of constructs that enable the building of more concise but expressive statements, is not desirable.
+
+Next to this, we also ask about an assessment about the \emph{abstraction level} that is provided by the transformation tool to solve this case study.
+It is a degree of the expressiveness of the solution ranging from high to low.
+The objective is to determine how closely the solution expresses the problem being addressed.
+A high abstraction level has the solution expresses in the terms of problem-level concepts while a low-level abstraction level is using simple implementation-level concepts.
