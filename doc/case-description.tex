@@ -1,4 +1,4 @@
-\documentclass{eptcs}
+\documentclass[submission]{eptcs}
 \providecommand{\event}{TTC 2015} % Name of the event you are submitting to
 
 \usepackage[usenames,dvipsnames,table]{xcolor}
@@ -65,12 +65,12 @@
 \begin{abstract}
 
 Java 5 introduced annotations as a systematic mean to attach syntactic meta-data to various elements of Java source code.
-Since then, annotations have been extensively used by a number of libraries, frameworks and tools to conveniently extend behavior of Java programs that would otherwise have to be done manually or synthesized from an external resource.
+Since then, annotations have been extensively used by a number of libraries, frameworks and tools to conveniently extend behavior of Java programs that would otherwise have to be done manually or synthesized from external resources.
 The annotations are usually processed through reflection and the extended behavior is injected into Java classes using aspect-oriented techniques or a direct byte code modification.
-However, in some cases, class-level instrumentation might not always be available or desirable and the transformation happens at the source code level.
+However, in some cases, class-level instrumentation might not always be available neither desirable and therefore the transformation is done at the source code level.
 
 In this case study we focus on such source-level transformation.
-Concretely, the task is to inject behavior specified by an annotation library that encapsulates common programming concerns such as logging, caching and retry on a failure.
+Concretely, the task is to inject behavior specified by an annotation library that encapsulates common programming concerns such as logging, caching and a failure retry.
 The objective is to explore how are the contemporary transformation tools suitable for programming language transformations.
 \end{abstract}
 
@@ -81,6 +81,7 @@ The objective is to explore how are the contemporary transformation tools suitab
 \bibliographystyle{eptcs}
 \bibliography{references.bib}	
 
+\newpage 
 \appendix
 
 \input{code-listings.tex}

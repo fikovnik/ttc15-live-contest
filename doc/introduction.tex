@@ -5,12 +5,12 @@
 
 Java 5 has been extended with annotations that provide a convenient way to supply meta-data to various element of Java source code such as classes and methods.
 Since then, annotations have been extensively used by a number of Java libraries, frameworks and tools.
-One of the advantage of using annotations is that they attach syntactic meta-data directly to the relevant element of Java source code rather than decoupling them to external resources or setting them up manually through an API.
+One of the advantage of using annotations is that they attach syntactic meta-data directly to the relevant element of Java source code rather than decoupling them to external resources or setting them up manually through some API.
 
-Among other things, annotations can be used to express cross cutting concerns such as logging or caching that would otherwise cluttered the source code as they are notably difficult to abstract using regular programming techniques.\todo{Cite??}
-Essentially, an annotation acts as marker for a transformation tool which applies the expressed concern into the corresponding Java element.
+Among other things, annotations can be used to express crosscutting concerns such as logging or caching that would otherwise cluttered the source code as they are difficult to encapsulate using regular programming techniques~\cite{kiczales1997}.
+Essentially, an annotation acts as a marker for a transformation tool which applies the expressed concern into the corresponding Java element (\Eg, a class, a method).
 Majority of these tools rely on Java reflection API and some sort of class instrumentation using aspect-oriented programming (AOP) techniques or direct byte code manipulation to process the these annotations.
-While this is usually the preferred way, in some cases, the class level instrumentation might not available or desirable.
+While this is usually the preferred way, in some cases, the class level instrumentation might not available neither desirable.
 The problem is that it might 
 %
 \begin{inparaenum}[(i)]
@@ -20,13 +20,12 @@ The problem is that it might
 \end{inparaenum}
 
 In this case study we focus on the situation when class level instrumentation is not possible and develop a solution for annotation processing based on source level transformation.
-Concretely, the transformation task to inject behavior specified by an annotation library that covers common programming concerns such as logging, caching and retry on a failure.
-The objective is to explore how the current transformation tools are suitable for programming language transformations.
+Concretely, the transformation task is to inject behavior specified by an annotation library that covers common programming concerns such as logging, caching and retry certain type of failures.
+The objective is to explore how the current model transformation tools are suitable for programming language transformations; particularly in comparison to some dedicated program transformation libraries such as Spoon~\cite{pawlak2014}.
+The idea to bring together different communities on a common transformation problem.
 
-In the next section we present the sample annotation library and describe the tasks of the case study in more detail.
-After that, Section~\ref{sec:EvaluationCriteria} overviews criteria that will be used to evaluate submitted solutions to this case study.
+In the next section we present the sample annotation library and describe the tasks of the case study in more details.
+After that, Section~\ref{sec:EvaluationCriteria} overviews criteria that will be used to evaluate submitted solutions.
 
 All supporting material, as well as this document, is available on the case study \href{https://github.com/fikovnik/ttc15-tranj-case}{github page}\footnote{\url{https://github.com/fikovnik/ttc15-tranj-case}}.
-The contestants are invited to submit an issue shall there be any ambiguity about the transformation tasks that shall be carried in this case study.
-
-\Todo{@Martin: cite some AOP / annotations paper?}
+The contestants are invited to submit an issue shall there be any ambiguity about the transformation tasks that are carried in this case study.
