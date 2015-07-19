@@ -7,22 +7,23 @@ As the annotation library, we use a simplified version of jcabi-aspects~\cite{jc
 In order to balance the development effort in this case study, we have selected the following annotations from the jcabi-aspects library:
 %
 \begin{itemize}[--]
-  \item \href{https://github.com/fikovnik/ttc15-tranj-case/blob/master/src/ttc15-tranj/src/main/java/ttc15/tranj/annotation/RetryOnFailure.java}{\javainline|@RetryOnFailure|} for an automated retry of failed method execution,
-  \item \href{https://github.com/fikovnik/ttc15-tranj-case/blob/master/src/ttc15-tranj/src/main/java/ttc15/tranj/annotation/Cacheable.java}{\javainline|@Cacheable|} for a simple data caching of parameterless methods return values, and
-  \item \href{https://github.com/fikovnik/ttc15-tranj-case/blob/master/src/ttc15-tranj/src/main/java/ttc15/tranj/annotation/Loggable.java}{\javainline|@Loggable|} for an automated logging of method calls.
+  \item \href{https://github.com/fikovnik/ttc15-live-contest/blob/master/src/ttc15-tranj/src/main/java/ttc15/tranj/annotation/RetryOnFailure.java}{\javainline|@RetryOnFailure|} for an automated retry of failed method execution,
+  \item \href{https://github.com/fikovnik/ttc15-live-contest/blob/master/src/ttc15-tranj/src/main/java/ttc15/tranj/annotation/Cacheable.java}{\javainline|@Cacheable|} for a simple data caching of parameterless methods return values, and
+  \item \href{https://github.com/fikovnik/ttc15-live-contest/blob/master/src/ttc15-tranj/src/main/java/ttc15/tranj/annotation/Loggable.java}{\javainline|@Loggable|} for an automated logging of method calls.
 \end{itemize}
 
 The core transformation involves traversing Java source code and extending the annotated methods with the behavior specified by these annotations.
-The details of each annotation including the specification of its arguments are provided in its associated \href{https://github.com/fikovnik/ttc15-tranj-case/tree/master/src/ttc15-tranj/src/main/java/ttc15/tranj/annotation}{javadoc}.
+The details of each annotation including the specification of its arguments are provided in its associated \href{https://github.com/fikovnik/ttc15-live-contest/tree/master/src/ttc15-tranj/src/main/java/ttc15/tranj/annotation}{javadoc}.
 
 In the following text we provide an overview of the individual transformation tasks that are part of this case study.
-The transformations are illustrated on an example rather than formally described which we believe should be sufficient\footnote{Shall there be any ambiguity, the readers are invited to raise an issue on the case study \href{https://github.com/fikovnik/ttc15-tranj-case}{github page}.} given the nature of the transformation.
+The transformations are illustrated on an example rather than formally described which we believe should be sufficient\footnote{Shall there be any ambiguity, the readers are invited to raise an issue on the case study \href{https://github.com/fikovnik/ttc15-live-contest}{github page}.} given the nature of the transformation.
 % While we believe that it should be sufficient to understand the nature of the transformation tasks to be carried out since the chosen concerns are familiar to software developers and the source code transformations follows their natural implementation.
-% However, shall there be any ambiguity, the readers are invited to raise an issue on the case study \href{https://github.com/fikovnik/ttc15-tranj-case}{github page}.
-The first three tasks consider each of the listed annotation individually, while in the last task, we look on the case of combining these annotations together.
-Finally, we also propose an extension for an optimization the resulting Java source code when these annotations are combined.
+% However, shall there be any ambiguity, the readers are invited to raise an issue on the case study \href{https://github.com/fikovnik/ttc15-live-contest}{github page}.
+In the following we discuss the details of the individual annotation transformations.
+% The first three tasks consider each of the listed annotation individually, while in the last task, we look on the case of combining these annotations together.
+% Finally, we also propose an extension for an optimization the resulting Java source code when these annotations are combined.
 %
-The complete code for these transformation tasks is provide on the github page in the \href{https://github.com/fikovnik/ttc15-tranj-case/tree/master/src/ttc15-tranj/src/main/java/ttc15/tranj/examples}{\javainline|ttc15.tranj.examples| package}.
+The code for these transformation tasks is provided on the github page in the \href{https://github.com/fikovnik/ttc15-live-contest/tree/master/src/ttc15-tranj/src/main/java/ttc15/tranj/examples}{\javainline|ttc15.tranj.examples| package}.
 
 \subsection{Running Example}
 
@@ -71,7 +72,7 @@ When the basic functionality is implemented, we would like to extend it with the
    All exceptions handled within the method body should be also logged.
 \end{itemize} 
 
-Instead of coding this manually, producing code such as the one shown in the listing in Section~\ref{sec:ManualURLDownload}, we would like to use annotations to declaratively specify the above concerns, and have a transformation tool automatically synthesize code similar to the listing shown in Section~\ref{sec:SynthesizedURLDownload}.
+Instead of coding this manually, we would like to use annotations to declaratively specify the above concerns, and have a transformation tool automatically synthesize code similar to the listing shown in Section~\ref{sec:SynthesizedURLDownload}.
 Concretely, the only change to the original code should be the following annotations:
 %
 \begin{javacode}
@@ -273,9 +274,9 @@ public byte[] get() throws IOException { ... }
 The code transformation should be performed in the declared order--\Ie, first applying \javainline|@RetryOnFailure|, then \javainline|@Cacheable| and finally adding \javainline|@Loggable|.
 The expected result is shown in Section~\ref{sec:SynthesizedURLDownload}.
 
-\subsection{Extension 1: Optimization (\emph{optional})}
+% \subsection{Extension 1: Optimization (\emph{optional})}
 
-An optional extension to this case study is to have the annotations being aware of one another.
-In this case, the order of the annotations does not matter and they will be always applied in the order specified in the task 4.
-For the caching and retry on failure, nothing will change, but the logging will recognize the generated code and it will adjust the logging messages appropriately.
-The expected result--\Ie placement and message content is shown in Section~\ref{sec:ManualURLDownload}.
+% An optional extension to this case study is to have the annotations being aware of one another.
+% In this case, the order of the annotations does not matter and they will be always applied in the order specified in the task 4.
+% For the caching and retry on failure, nothing will change, but the logging will recognize the generated code and it will adjust the logging messages appropriately.
+% The expected result--\Ie placement and message content is shown in Section~\ref{sec:ManualURLDownload}.
