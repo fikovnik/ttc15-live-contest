@@ -15,7 +15,8 @@ public class ManualURLDownload {
   private static final long CACHE_TIMEOUT = 1000;
   private static final int MAX_RETRY = 3;
 
-  private final Logger logger = LoggerFactory.getLogger(ManualURLDownload.class);
+  private final Logger logger = LoggerFactory
+      .getLogger(ManualURLDownload.class);
 
   private long lastAccessed = 0;
   private byte[] cachedContent = null;
@@ -27,14 +28,16 @@ public class ManualURLDownload {
 
   public byte[] get() throws IOException {
     long entryTime = System.currentTimeMillis();
-    
+
     if (logger.isTraceEnabled()) {
       logger.trace(String.format("get() [url='%s']: entry", url));
     }
 
-    if (System.currentTimeMillis() - lastAccessed < CACHE_TIMEOUT && cachedContent != null) {
+    if (System.currentTimeMillis() - lastAccessed < CACHE_TIMEOUT
+        && cachedContent != null) {
       if (logger.isTraceEnabled()) {
-        logger.trace(String.format("get(): exit cached [%d ms]", System.currentTimeMillis() - entryTime));
+        logger.trace(String.format("get(): exit cached [%d ms]",
+            System.currentTimeMillis() - entryTime));
       }
       return cachedContent;
     }
@@ -42,25 +45,34 @@ public class ManualURLDownload {
     int retryCount = 0;
 
     while (true) {
-      try (InputStream input = url.openStream()) {
+      InputStream input = null;
+      try {
+        try {
+          input = url.openStream();
 
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        byte[] chunk = new byte[4*1024];
-        int n;
+          ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+          byte[] chunk = new byte[4 * 1024];
+          int n;
 
-        while ((n = input.read(chunk)) > 0 ) {
-          buffer.write(chunk, 0, n);
+          while ((n = input.read(chunk)) > 0) {
+            buffer.write(chunk, 0, n);
+          }
+
+          cachedContent = buffer.toByteArray();
+          lastAccessed = System.currentTimeMillis();
+
+          if (logger.isTraceEnabled()) {
+            logger.trace(String.format("get(): exit [%d ms]",
+                System.currentTimeMillis() - entryTime));
+          }
+          return cachedContent;
+        } finally {
+          if (input != null) {
+            input.close();
+          }
         }
-
-        cachedContent = buffer.toByteArray();
-        lastAccessed = System.currentTimeMillis();
-
-        if (logger.isTraceEnabled()) {
-          logger.trace(String.format("get(): exit [%d ms]", System.currentTimeMillis() - entryTime));
-        }
-        return cachedContent;
       } catch (UnknownHostException e) {
-          logger.error("get(): exception -> forced exit", e);
+        logger.error("get(): exception -> forced exit", e);
         throw e;
       } catch (SocketTimeoutException e) {
         if (logger.isWarnEnabled()) {
@@ -86,6 +98,10 @@ public class ManualURLDownload {
           if (logger.isTraceEnabled()) {
             logger.trace("get(): retrying");
           }
+        }
+      } finally {
+        if (input != null) {
+          input.close();
         }
       }
     }

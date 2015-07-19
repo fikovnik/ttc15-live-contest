@@ -20,7 +20,9 @@ public class URLDownloadWithRetry {
 
     while (true) {
       try {
-        try (InputStream input = url.openStream()) {
+        InputStream input = null;
+        try {
+          input = url.openStream();
 
           ByteArrayOutputStream buffer = new ByteArrayOutputStream();
           byte[] chunk = new byte[4 * 1024];
@@ -31,6 +33,10 @@ public class URLDownloadWithRetry {
           }
 
           return buffer.toByteArray();
+        } finally {
+          if (input != null) {
+            input.close();
+          }
         }
       } catch (UnknownHostException e) {
         throw e;

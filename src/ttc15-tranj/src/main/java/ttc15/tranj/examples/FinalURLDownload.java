@@ -24,8 +24,10 @@ public class FinalURLDownload {
   @Cacheable(lifetime = 1000)
   @Loggable
   public byte[] get() throws IOException {
-    try (InputStream input = url.openStream()) {
-
+    InputStream input = null;
+    try {
+      input = url.openStream();
+      
       ByteArrayOutputStream buffer = new ByteArrayOutputStream();
       byte[] chunk = new byte[4 * 1024];
       int n;
@@ -35,6 +37,10 @@ public class FinalURLDownload {
       }
 
       return buffer.toByteArray();
+    } finally {
+      if (input != null) {
+        input.close();
+      }
     }
   }
 }

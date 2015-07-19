@@ -22,7 +22,10 @@ public class URLDownloadWithCache {
       return __getCacheContent;
     }
 
-    try (InputStream input = url.openStream()) {
+    InputStream input = null;
+    try {
+      input = url.openStream();
+
       ByteArrayOutputStream buffer = new ByteArrayOutputStream();
       byte[] chunk = new byte[4 * 1024];
       int n;
@@ -33,8 +36,12 @@ public class URLDownloadWithCache {
 
       __getCacheContent = buffer.toByteArray();
       __getCacheLastAccessed = System.currentTimeMillis();
-      
+
       return __getCacheContent;
+    } finally {
+      if (input != null) {
+        input.close();
+      }
     }
   }
 }

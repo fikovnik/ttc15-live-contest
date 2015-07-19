@@ -23,7 +23,9 @@ public class URLDownloadWithLogging {
     }
 
     while (true) {
-      try (InputStream input = url.openStream()) {
+      InputStream input = null;
+      try {
+        input = url.openStream();
 
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         byte[] chunk = new byte[4 * 1024];
@@ -38,6 +40,10 @@ public class URLDownloadWithLogging {
               System.currentTimeMillis() - __entryTime));
         }
         return buffer.toByteArray();
+      } finally {
+        if (input != null) {
+          input.close();
+        }
       }
     }
   }
